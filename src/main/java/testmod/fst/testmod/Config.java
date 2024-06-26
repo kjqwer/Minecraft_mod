@@ -37,7 +37,6 @@ public class Config
             .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), Config::validateItemName);
 
     static final ForgeConfigSpec SPEC = BUILDER.build();
-
     public static boolean logDirtBlock;
     public static int magicNumber;
     public static String magicNumberIntroduction;
