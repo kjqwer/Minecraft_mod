@@ -1,3 +1,4 @@
 {
-  "block.testmod.myblock": "小狗方块"
+  "block.testmod.myblock": "小狗方块",
+  "item.testmod.staff": "法杖"
 }
