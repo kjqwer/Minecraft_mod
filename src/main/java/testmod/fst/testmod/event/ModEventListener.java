@@ -10,7 +10,7 @@ import static testmod.fst.testmod.TestMod.myBlock;
 import static testmod.fst.testmod.TestMod.STAFF_ITEM;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = MODID)
-public class EventListener{
+public class ModEventListener {
     @SubscribeEvent
     public static void addCreativeTab(BuildCreativeModeTabContentsEvent event ){
         if(event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS){

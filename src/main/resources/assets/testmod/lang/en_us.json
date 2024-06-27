@@ -1,4 +1,5 @@
 {
   "block.testmod.myblock": "DOG Block",
-  "item.testmod.staff": "Magic Staff"
+  "item.testmod.staff": "Magic Staff",
+  "mytabname": "testmod"
 }
