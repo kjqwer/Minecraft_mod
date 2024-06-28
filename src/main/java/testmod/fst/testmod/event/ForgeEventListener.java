@@ -6,6 +6,7 @@ import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.StemBlock;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.BonemealEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -30,4 +31,10 @@ public class ForgeEventListener {
         GetMpCommand.register(event.getDispatcher());
     }
 
+    @SubscribeEvent
+    public static void playerClone(PlayerEvent.Clone event){
+        event.getOriginal().getCapability(PlayerMpProvider.PLAYER_MP_CAPABILITY).ifPresent(old ->
+                event.getEntity().getCapability(PlayerMpProvider.PLAYER_MP_CAPABILITY).ifPresent(mp ->
+                        mp.setMp(old.getMp())));
+    }
 }
