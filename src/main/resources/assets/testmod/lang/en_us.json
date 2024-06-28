@@ -1,5 +1,8 @@
 {
   "block.testmod.myblock": "DOG Block",
   "item.testmod.staff": "Magic Staff",
-  "mytabname": "testmod"
+  "mytabname": "testmod",
+  "item.testmod.magic_wand": "Magic Wand",
+  "item.testmod.fireball_module": "Fireball Module",
+  "itemGroup.mytab": "My Custom Tab"
 }

@@ -28,6 +28,7 @@ import testmod.fst.testmod.capability.myMP.PlayerMpProvider;
 import testmod.fst.testmod.config.CommonConfig;
 import testmod.fst.testmod.event.BlockBreakEventHandler;
 import testmod.fst.testmod.event.CreativeModeTabListener;
+import testmod.fst.testmod.items.ModItems;
 import testmod.fst.testmod.items.StaffItem;
 import testmod.fst.testmod.networking.ModMessages;
 
@@ -47,19 +48,21 @@ public class TestMod {
             () -> new StaffItem(new Item.Properties()));
     public TestMod() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        // 注册物品
+        ModItems.register(bus);
         BLOCKS.register(bus);
         ITEMS.register(bus);
         CreativeModeTabListener.CREATIVE_MODE_TABS.register(bus);
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, this::attachCapability);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.SPEC);
         MinecraftForge.EVENT_BUS.register(BlockBreakEventHandler.class);
-
         // 注册消息
         bus.addListener(this::setup);
     }
     private void setup(final FMLCommonSetupEvent event) {
         ModMessages.register();
     }
+    // 附加能力
     public void attachCapability(AttachCapabilitiesEvent<Entity> event){
         if(event.getObject() instanceof Player player){
             if(!player.getCapability(PlayerMpProvider.PLAYER_MP_CAPABILITY).isPresent()){
@@ -68,3 +71,4 @@ public class TestMod {
         }
     }
 }
+

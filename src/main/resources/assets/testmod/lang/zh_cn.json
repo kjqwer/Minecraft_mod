@@ -1,4 +1,7 @@
 {
   "block.testmod.myblock": "小狗方块",
-  "item.testmod.staff": "法杖"
+  "item.testmod.staff": "法杖",
+  "item.testmod.magic_wand": "魔杖",
+  "item.testmod.fireball_module": "火球模块",
+  "itemGroup.mytab": "自定义标签"
 }
