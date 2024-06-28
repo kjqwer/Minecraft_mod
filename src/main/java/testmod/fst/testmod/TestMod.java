@@ -1,51 +1,35 @@
 package testmod.fst.testmod;
 
 import com.mojang.logging.LogUtils;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.SmallFireball;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.UseAnim;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 import testmod.fst.testmod.blocks.MyCustomBlock;
+import testmod.fst.testmod.capability.myMP.PlayerMpProvider;
+import testmod.fst.testmod.config.CommonConfig;
+import testmod.fst.testmod.event.BlockBreakEventHandler;
 import testmod.fst.testmod.event.CreativeModeTabListener;
 import testmod.fst.testmod.items.StaffItem;
-import net.minecraft.world.item.CreativeModeTabs;
+import testmod.fst.testmod.networking.ModMessages;
 
 @Mod(TestMod.MODID)
 public class TestMod {
@@ -66,6 +50,21 @@ public class TestMod {
         BLOCKS.register(bus);
         ITEMS.register(bus);
         CreativeModeTabListener.CREATIVE_MODE_TABS.register(bus);
-    }
+        MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, this::attachCapability);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.SPEC);
+        MinecraftForge.EVENT_BUS.register(BlockBreakEventHandler.class);
 
+        // 注册消息
+        bus.addListener(this::setup);
+    }
+    private void setup(final FMLCommonSetupEvent event) {
+        ModMessages.register();
+    }
+    public void attachCapability(AttachCapabilitiesEvent<Entity> event){
+        if(event.getObject() instanceof Player player){
+            if(!player.getCapability(PlayerMpProvider.PLAYER_MP_CAPABILITY).isPresent()){
+                event.addCapability(new ResourceLocation(MODID, "mp"), new PlayerMpProvider());
+            }
+        }
+    }
 }
